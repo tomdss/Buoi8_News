@@ -3,17 +3,40 @@ package com.t3h.buoi8_news;
 import android.app.SearchManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+import com.t3h.buoi8_news.adapter.NewsAdapter;
+import com.t3h.buoi8_news.model.News;
+import com.t3h.buoi8_news.parser.XMLAsync;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, XMLAsync.ParserXMLCallback, NewsAdapter.FaceItemListener {
+
+    private List<News> data = new ArrayList<>();
+    private NewsAdapter adapter;
+    private RecyclerView lvNews;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initViews();
+    }
+
+    private void initViews() {
+
+        adapter = new NewsAdapter(this, data);
+        adapter.setListener(this);
+        lvNews = findViewById(R.id.lv_news);
+        lvNews.setAdapter(adapter);
+
     }
 
     @Override
@@ -33,12 +56,35 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextSubmit(String s) {
+
+        if(s.isEmpty()){
+            return false;
+        }
+
+        XMLAsync async = new XMLAsync(this);
+        async.execute(s);
+
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
         return false;
+    }
+
+    @Override
+    public void onParserFinish(ArrayList<News> arr) {
+
+    }
+
+    @Override
+    public void onClick(int position) {
+
+    }
+
+    @Override
+    public void onLongClick(int position) {
+
     }
 
 

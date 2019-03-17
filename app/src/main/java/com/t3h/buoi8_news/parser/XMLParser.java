@@ -42,16 +42,23 @@ public class XMLParser extends DefaultHandler {
             case Constances.LINK:
                 item.setLink(builder.toString());
                 break;
+
+            case Constances.DESC:
+                item.setDesc(builder.toString());
+                break;
+
             case Constances.PUB_DATE:
                 item.setPubDate(builder.toString());
                 break;
             case Constances.ITEM:
                 arr.add(item);
                 break;
-                
 
         }
 
     }
 
+    public ArrayList<News> getArr() {
+        return arr;
+    }
 }
