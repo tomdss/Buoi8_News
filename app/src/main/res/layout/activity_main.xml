@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/lv_news"
         android:layout_width="match_parent"
@@ -16,7 +17,4 @@
         android:scrollbarStyle="outsideInset"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         />
-
-
-
 </LinearLayout>

@@ -17,8 +17,13 @@ public class XMLParser extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
-        if(qName== Constances.ITEM){
+        if(qName.equals(Constances.ITEM)){
             item = new News();
+        }
+
+        if(qName.equals(Constances.IMAGE)){
+            String img = attributes.getValue("url");
+            item.setImage(img);
         }
         builder = new StringBuilder();
     }
@@ -44,7 +49,7 @@ public class XMLParser extends DefaultHandler {
                 break;
 
             case Constances.DESC:
-                item.setDesc(builder.toString());
+                descGoogleNews();
                 break;
 
             case Constances.PUB_DATE:
@@ -53,12 +58,40 @@ public class XMLParser extends DefaultHandler {
             case Constances.ITEM:
                 arr.add(item);
                 break;
-
         }
 
     }
 
+
+    private void descGoogleNews() {
+
+        String s = "<p>";
+        String value = builder.toString();
+
+        int i = value.indexOf(s);
+
+        if(i>=0){
+            String value1;
+            int index = value.indexOf(s) + s.length();
+            value1 = value.substring(index);
+            String desc = value1.substring(0, value1.indexOf("</p>"));
+//        item.setDesc("123");
+            item.setDesc(desc);
+        }else {
+            item.setDesc("Description");
+        }
+
+
+    }
+
+
     public ArrayList<News> getArr() {
         return arr;
     }
+
+//    public interface FaceItemListener{
+////        void onClick(int position);
+////        void onLongClick(int position);
+////
+////    }
 }

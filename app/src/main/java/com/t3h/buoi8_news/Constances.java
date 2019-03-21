@@ -6,4 +6,5 @@ public interface Constances {
     String DESC = "description";
     String LINK = "link";
     String PUB_DATE = "pubDate";
+    String IMAGE = "media:content";
 }

@@ -1,26 +1,27 @@
 package com.t3h.buoi8_news;
 
-import android.app.SearchManager;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.t3h.buoi8_news.adapter.NewsAdapter;
 import com.t3h.buoi8_news.model.News;
 import com.t3h.buoi8_news.parser.XMLAsync;
+import com.t3h.buoi8_news.utils.DialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, XMLAsync.ParserXMLCallback, NewsAdapter.FaceItemListener {
 
-    private List<News> data = new ArrayList<>();
+    public static final String REQUEST_LINK = "request.link";
     private NewsAdapter adapter;
     private RecyclerView lvNews;
+
 
 
     @Override
@@ -32,10 +33,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private void initViews() {
 
-        adapter = new NewsAdapter(this, data);
+        adapter = new NewsAdapter(this);
         adapter.setListener(this);
+
         lvNews = findViewById(R.id.lv_news);
         lvNews.setAdapter(adapter);
+
 
     }
 
@@ -61,8 +64,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             return false;
         }
 
+        DialogUtils.show(this);
+
         XMLAsync async = new XMLAsync(this);
         async.execute(s);
+
+        lvNews.getLayoutManager().scrollToPosition(0);
 
         return false;
     }
@@ -75,15 +82,39 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public void onParserFinish(ArrayList<News> arr) {
 
+        DialogUtils.dissmiss();
+        adapter.setData(arr);
+
     }
+
+
+    public void byExtra(String link){
+
+        Intent intent = new Intent(MainActivity.this, WebviewActivity.class);
+
+        intent.putExtra(REQUEST_LINK,link);
+        this.startActivity(intent);
+    }
+
+
+
 
     @Override
     public void onClick(int position) {
+
+//        Toast.makeText(this, adapter.getData().get(position).getLink(), Toast.LENGTH_SHORT).show();
+
+        byExtra(adapter.getData().get(position).getLink());
 
     }
 
     @Override
     public void onLongClick(int position) {
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 

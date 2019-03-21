@@ -1,33 +1,41 @@
 package com.t3h.buoi8_news.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 
 import com.t3h.buoi8_news.R;
 import com.t3h.buoi8_news.model.News;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.FaceHolder>  {
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.FaceHolder> {
 
     private LayoutInflater inflater;//anh xa item_face thanh 1 view
-    private List<News> data;
+    private ArrayList<News> data;
     private FaceItemListener listener;
 
-    public NewsAdapter(Context context, List<News> data) {
+    public NewsAdapter(Context context) {
+        inflater = LayoutInflater.from(context);
+    }
+
+    public void setData(ArrayList<News> data) {
         this.data = data;
-        inflater=LayoutInflater.from(context);
+        notifyDataSetChanged();
+    }
+
+    public ArrayList<News> getData() {
+        return data;
     }
 
     public void setListener(FaceItemListener listener) {
@@ -38,20 +46,20 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.FaceHolder>  {
     @Override
     public FaceHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
         View v = inflater.inflate(R.layout.item_news,
-                viewGroup,false);
-        FaceHolder holder=new FaceHolder(v);//anh xa layout  ra roi truyen vao holder
+                viewGroup, false);
+        FaceHolder holder = new FaceHolder(v);//anh xa layout  ra roi truyen vao holder
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull FaceHolder faceHolder, final int position) {
 
-        News f =data.get(position);
+        News f = data.get(position);
         faceHolder.bindData(f);
         faceHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener!=null){
+                if (listener != null) {
                     listener.onClick(position);
                 }
             }
@@ -61,7 +69,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.FaceHolder>  {
             @Override
             public boolean onLongClick(View v) {
 
-                if(listener!=null){
+                if (listener != null) {
                     listener.onLongClick(position);
                 }
                 return true;
@@ -72,7 +80,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.FaceHolder>  {
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return data == null ? 0 : data.size();
     }
 
 
@@ -85,47 +93,44 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.FaceHolder>  {
 
         public FaceHolder(@NonNull View itemView) {
             super(itemView);
-            ivNews=itemView.findViewById(R.id.iv_news);
-            tvTitle=itemView.findViewById(R.id.tv_title);
-            tvDesc=itemView.findViewById(R.id.tv_desc);
-            tvPubdate=itemView.findViewById(R.id.tv_pubDate);
+            ivNews = itemView.findViewById(R.id.iv_news);
+            tvTitle = itemView.findViewById(R.id.tv_title);
+            tvDesc = itemView.findViewById(R.id.tv_desc);
+            tvPubdate = itemView.findViewById(R.id.tv_pubDate);
 
         }
 
-        public void bindData(final News news){
+        public void bindData(final News news) {
 
             tvTitle.setText(news.getTitle());
             tvPubdate.setText(news.getPubDate());
             tvDesc.setText(news.getDesc());
 
 
-
-//            Glide.with(ivNews)
-//                    .load(news.getImage())
-//                    .placeholder(R.mipmap.ic_launcher)
-//                    .error(R.mipmap.ic_launcher)
-//                    .into(ivNews);
+            Glide.with(ivNews)
+                    .load(news.getImage())
+                    .placeholder(R.drawable.loading)
+                    .error(R.drawable.no_img)
+                    .into(ivNews);
+        }
 //            itemView.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
 //                    Intent intent = new Intent(Intent.ACTION_VIEW);
 //                    intent.setData(Uri.parse(news.getLink()));
 //                    itemView.getContext().startActivity(intent);
+//        }
+//    });
+    }
 
+        public interface FaceItemListener {
+            void onClick(int position);
 
-
-//                }
-//            });
+            void onLongClick(int position);
 
         }
 
-    }
-
-    //xu ly su kien click hay longclick
-    public interface FaceItemListener{
-        void onClick(int position);
-        void onLongClick(int position);
-
-    }
 
 }
+
+
