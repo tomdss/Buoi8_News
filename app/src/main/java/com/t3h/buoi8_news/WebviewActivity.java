@@ -56,9 +56,9 @@ public class WebviewActivity extends AppCompatActivity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
 //            Toast.makeText(WebviewActivity.this, "on START", Toast.LENGTH_SHORT).show();
-
-            DialogUtils.showCancel(WebviewActivity.this);
             super.onPageStarted(view, url, favicon);
+            DialogUtils.showCancel(WebviewActivity.this);
+
         }
 
 

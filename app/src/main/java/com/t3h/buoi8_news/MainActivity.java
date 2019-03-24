@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.t3h.buoi8_news.adapter.NewsAdapter;
@@ -16,11 +18,16 @@ import com.t3h.buoi8_news.utils.DialogUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, XMLAsync.ParserXMLCallback, NewsAdapter.FaceItemListener {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, XMLAsync.ParserXMLCallback, NewsAdapter.FaceItemListener, View.OnClickListener {
 
     public static final String REQUEST_LINK = "request.link";
     private NewsAdapter adapter;
     private RecyclerView lvNews;
+    private TextView tvCaption;
+
+    private TextView tvNews;
+    private TextView tvSaved;
+    private TextView tvFavorite;
 
 
 
@@ -33,10 +40,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private void initViews() {
 
+        tvNews = findViewById(R.id.tv_news);
+        tvSaved=findViewById(R.id.tv_saved);
+        tvFavorite=findViewById(R.id.tv_favorite);
+        tvNews.setOnClickListener(this);
+        tvSaved.setOnClickListener(this);
+        tvFavorite.setOnClickListener(this);
+
         adapter = new NewsAdapter(this);
         adapter.setListener(this);
 
         lvNews = findViewById(R.id.lv_news);
+        tvCaption=findViewById(R.id.tv_caption);
         lvNews.setAdapter(adapter);
 
 
@@ -82,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public void onParserFinish(ArrayList<News> arr) {
 
+        tvCaption.setVisibility(View.GONE);
         DialogUtils.dissmiss();
         adapter.setData(arr);
 
@@ -111,10 +127,39 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public void onLongClick(int position) {
 
+        Toast.makeText(this, "SAVED "+position, Toast.LENGTH_SHORT).show();
+
+
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tv_news:
+                Intent intent = new Intent(this,MainActivity.class);
+
+                this.startActivity(intent);
+
+                break;
+
+            case R.id.tv_saved:
+                Intent intentSaved = new Intent(this,SavedActivity.class);
+
+                this.startActivity(intentSaved);
+                break;
+
+            case R.id.tv_favorite:
+
+                break;
+
+            default:
+                break;
+        }
 
     }
 

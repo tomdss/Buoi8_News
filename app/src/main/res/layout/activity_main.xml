@@ -5,16 +5,79 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_rec"
+        android:padding="@dimen/dp4"
+        >
+
+        <TextView
+            android:gravity="center"
+            android:id="@+id/tv_news"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="TIN TỨC"
+            android:textColor="@android:color/white"
+            />
+
+        <TextView
+            android:gravity="center"
+            android:id="@+id/tv_saved"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="ĐÃ LƯU"
+            android:textColor="@android:color/white"
+            />
+
+        <TextView
+            android:enabled="false"
+            android:gravity="center"
+            android:id="@+id/tv_favorite"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="YÊU THÍCH"
+            android:textColor="@android:color/white"
+            />
+
+    </LinearLayout>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/lv_news"
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:scrollbars="vertical"
-        android:scrollbarStyle="outsideInset"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        />
+        android:background="@drawable/bg_rec"
+        tools:context=".MainActivity"
+
+        >
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lv_news"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="vertical"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+        <TextView
+            android:id="@+id/tv_caption"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/kh_ng_c_b_i_vi_t_n_o_hi_n_th"
+            android:textSize="@dimen/size18"
+
+            />
+    </RelativeLayout>
+
 </LinearLayout>
