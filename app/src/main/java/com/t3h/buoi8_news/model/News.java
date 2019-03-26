@@ -1,11 +1,24 @@
 package com.t3h.buoi8_news.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
+@Entity
 public class News {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+    @ColumnInfo
     private String title;
+    @ColumnInfo
     private String desc;
+    @ColumnInfo
     private String link;
+    @ColumnInfo
     private String image;
+    @ColumnInfo
     private String pubDate;
 
     public String getTitle() {
@@ -46,6 +59,14 @@ public class News {
 
     public void setPubDate(String pubDate) {
         this.pubDate = pubDate;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
 

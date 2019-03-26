@@ -21,20 +21,21 @@ import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.FaceHolder> {
 
+
     private LayoutInflater inflater;//anh xa item_face thanh 1 view
-    private ArrayList<News> data;
+    private List<News> data;
     private FaceItemListener listener;
 
     public NewsAdapter(Context context) {
         inflater = LayoutInflater.from(context);
     }
 
-    public void setData(ArrayList<News> data) {
+    public void setData(List<News> data) {
         this.data = data;
         notifyDataSetChanged();
     }
 
-    public ArrayList<News> getData() {
+    public List<News> getData() {
         return data;
     }
 
