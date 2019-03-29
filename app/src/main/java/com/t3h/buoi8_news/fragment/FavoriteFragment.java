@@ -3,39 +3,29 @@ package com.t3h.buoi8_news.fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.t3h.buoi8_news.AppDatabase;
 import com.t3h.buoi8_news.AppDatabaseFavorite;
 import com.t3h.buoi8_news.MainActivity;
 import com.t3h.buoi8_news.R;
 import com.t3h.buoi8_news.WebviewActivity;
 import com.t3h.buoi8_news.adapter.NewsAdapter;
+import com.t3h.buoi8_news.connect.ConnectionDetector;
 import com.t3h.buoi8_news.model.News;
 
 import java.util.List;
 
-public class FavoriteFragment extends Fragment implements NewsAdapter.FaceItemListener {
+public class FavoriteFragment extends BaseFragment implements NewsAdapter.FaceItemListener {
 
     private RecyclerView lvFavoriteNews;
     private NewsAdapter adapter;
     private List<News> data;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.frag_favorite,container,false);
-
-        return v;
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -45,6 +35,16 @@ public class FavoriteFragment extends Fragment implements NewsAdapter.FaceItemLi
         lvFavoriteNews.setAdapter(adapter);
         getData();
         adapter.setListener(this);
+    }
+
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.frag_favorite;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Favorite";
     }
 
 
@@ -60,10 +60,16 @@ public class FavoriteFragment extends Fragment implements NewsAdapter.FaceItemLi
 
     @Override
     public void onClick(int position) {
+        ConnectionDetector connectionDetector = new ConnectionDetector(this.getContext());
 
 //        Toast.makeText(getActivity(), "onClick", Toast.LENGTH_SHORT).show();
 
-        byExtra(adapter.getData().get(position).getLink());
+        if(connectionDetector.isInternetAvailble())
+            byExtra(adapter.getData().get(position).getLink());
+        else
+            byExtraPath(adapter.getData().get(position).getPath());
+
+//        Toast.makeText(getActivity(), ""+adapter.getData().get(position).getPath(), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -74,6 +80,15 @@ public class FavoriteFragment extends Fragment implements NewsAdapter.FaceItemLi
         intent.putExtra(MainActivity.REQUEST_LINK,link);
         this.startActivity(intent);
     }
+
+    public void byExtraPath(String path){
+
+        Intent intent = new Intent(getActivity(), WebviewActivity.class);
+
+        intent.putExtra(MainActivity.REQUEST_PATH,path);
+        this.startActivity(intent);
+    }
+
 
     @Override
     public void onLongClick(final int position) {
@@ -108,7 +123,5 @@ public class FavoriteFragment extends Fragment implements NewsAdapter.FaceItemLi
                 })
                 .show();
     }
-
-
 
 }

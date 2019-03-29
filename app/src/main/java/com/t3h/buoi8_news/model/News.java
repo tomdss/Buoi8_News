@@ -20,6 +20,8 @@ public class News {
     private String image;
     @ColumnInfo
     private String pubDate;
+    @ColumnInfo
+    private String path;
 
     public String getTitle() {
         return title;
@@ -67,6 +69,14 @@ public class News {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }
 

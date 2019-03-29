@@ -16,7 +16,7 @@ import com.t3h.buoi8_news.R;
 import com.t3h.buoi8_news.model.News;
 
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.FaceHolder> {
@@ -24,6 +24,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.FaceHolder> {
 
     private LayoutInflater inflater;//anh xa item_face thanh 1 view
     private List<News> data;
+    private List<File> dataFile;
     private FaceItemListener listener;
 
     public NewsAdapter(Context context) {
@@ -34,9 +35,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.FaceHolder> {
         this.data = data;
         notifyDataSetChanged();
     }
+    public void setDataFile(List<File> data) {
+        this.dataFile = dataFile;
+        notifyDataSetChanged();
+    }
 
     public List<News> getData() {
         return data;
+    }
+    public List<File> getDataFile() {
+        return dataFile;
     }
 
     public void setListener(FaceItemListener listener) {

@@ -1,9 +1,13 @@
 package com.t3h.buoi8_news;
 
 
+import android.Manifest;
 import android.content.DialogInterface;
+
+import android.support.design.widget.TabLayout;
+
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,9 +15,8 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.t3h.buoi8_news.adapter.PageAdapter;
 import com.t3h.buoi8_news.fragment.FavoriteFragment;
 import com.t3h.buoi8_news.fragment.NewsFragment;
 import com.t3h.buoi8_news.fragment.SavedFragment;
@@ -23,37 +26,52 @@ import com.t3h.buoi8_news.utils.DialogUtils;
 
 
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,  View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener {
 
 
     public static final String REQUEST_LINK = "request.link";
+    public static final String REQUEST_PATH = "request.path";
 
-    private TextView tvNews;
-    private TextView tvSaved;
-    private TextView tvFavorite;
+
+    private ViewPager pager;
+
+    private PageAdapter adapter;
+
+    private TabLayout tabTitle;
 
     private NewsFragment fmNews = new NewsFragment();
     private SavedFragment fmSaved = new SavedFragment();
     private FavoriteFragment fmFavorite = new FavoriteFragment();
 
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initViews();
-        initFragments();
-        showFragment(fmSaved);
+//        initFragments();
+//        showFragment(fmSaved);
     }
 
     private void initViews() {
 
-        tvNews = findViewById(R.id.tv_news);
-        tvSaved=findViewById(R.id.tv_saved);
-        tvFavorite=findViewById(R.id.tv_favorite);
-        tvNews.setOnClickListener(this);
-        tvSaved.setOnClickListener(this);
-        tvFavorite.setOnClickListener(this);
+        pager = findViewById(R.id.pager);
+        adapter = new PageAdapter(getSupportFragmentManager(),fmNews,fmSaved,fmFavorite);
+        pager.setAdapter(adapter);
+
+
+
+        tabTitle=findViewById(R.id.tab_title);
+        tabTitle.setupWithViewPager(pager);
+
+        pager.addOnPageChangeListener(this);
+
+        pager.setCurrentItem(1);
+
 //        adapter = new NewsAdapter(this);
 
 
@@ -61,43 +79,36 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
 
-    private void initFragments() {
+//    private void initFragments() {
+//
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.add(R.id.panel_news,fmNews);
+//        transaction.add(R.id.panel_news,fmSaved);
+//        transaction.add(R.id.panel_news,fmFavorite);
+//        transaction.commitNowAllowingStateLoss();
+//
+//    }
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.panel_news,fmNews);
-        transaction.add(R.id.panel_news,fmSaved);
-        transaction.add(R.id.panel_news,fmFavorite);
-        transaction.commitNowAllowingStateLoss();
 
+//    public void showFragment(Fragment fm) {
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+//        transaction.hide(fmNews);
+//        transaction.hide(fmSaved);
+//        transaction.hide(fmFavorite);
+//        transaction.show(fm);
+//        transaction.commitNowAllowingStateLoss();
+//    }
+
+    public void showFragment(Fragment fm){
+        if(fm==fmNews)pager.setCurrentItem(0);
+        if(fm==fmSaved)pager.setCurrentItem(1);
+        if(fm==fmFavorite)pager.setCurrentItem(2);
     }
 
 
-    public void showFragment(Fragment fm) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
-        transaction.hide(fmNews);
-        transaction.hide(fmSaved);
-        transaction.hide(fmFavorite);
-        transaction.show(fm);
-        showTextColor(fm);
-        transaction.commitNowAllowingStateLoss();
-    }
 
-    private void showTextColor(Fragment fm) {
-        if(fm==fmNews){
-            tvNews.setTextColor(getResources().getColor(R.color.colorAccent));
-            tvSaved.setTextColor(getResources().getColor(R.color.colorWhite));
-            tvFavorite.setTextColor(getResources().getColor(R.color.colorWhite));
-        }else if(fm==fmSaved){
-            tvSaved.setTextColor(getResources().getColor(R.color.colorAccent));
-            tvNews.setTextColor(getResources().getColor(R.color.colorWhite));
-            tvFavorite.setTextColor(getResources().getColor(R.color.colorWhite));
-        }else if(fm==fmFavorite){
-            tvFavorite.setTextColor(getResources().getColor(R.color.colorAccent));
-            tvNews.setTextColor(getResources().getColor(R.color.colorWhite));
-            tvSaved.setTextColor(getResources().getColor(R.color.colorWhite));
-        }
-    }
+
 
 
     @Override
@@ -126,14 +137,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         async.execute(s);
 
 //        lvNews.getLayoutManager().scrollToPosition(0);
-        showTextColor(fmNews);
-        showFragment(fmNews);
+//        showFragment(fmNews);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         return false;
     }
 
@@ -154,30 +167,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.tv_news:
-                showFragment(fmNews);
 
-
-                break;
-
-            case R.id.tv_saved:
-                showFragment(fmSaved);
-
-                break;
-
-            case R.id.tv_favorite:
-                showFragment(fmFavorite);
-
-                break;
-
-            default:
-                break;
-        }
-
-    }
 
     @Override
     public void onBackPressed() {
@@ -185,25 +175,29 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 //        Toast.makeText(this, "Back press", Toast.LENGTH_SHORT).show();
 
-        new AlertDialog.Builder(this)
-                .setTitle("Notify")
-                .setMessage("Do you want to exit?")
-                .setCancelable(false)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+        if(pager.getCurrentItem()==0){
+            new AlertDialog.Builder(this)
+                    .setTitle("Notify")
+                    .setMessage("Do you want to exit?")
+                    .setCancelable(false)
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 //                        Toast.makeText(MainActivity.this, "YES", Toast.LENGTH_SHORT).show();
-                        MainActivity.super.onBackPressed();
-                    }
-                })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                            MainActivity.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 //                        Toast.makeText(MainActivity.this, "NO", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                })
-                .show();
+                            return;
+                        }
+                    })
+                    .show();
+        }else pager.setCurrentItem(pager.getCurrentItem()-1);
+
+
 
 //        super.onBackPressed();
 
@@ -220,6 +214,23 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public FavoriteFragment getFmFavorite() {
         return fmFavorite;
     }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i1) {
+
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+
+    }
+
 
 
     //xu ly su kien click item
@@ -240,4 +251,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //
 //        return true;
 //    }
+
+
+
+
 }

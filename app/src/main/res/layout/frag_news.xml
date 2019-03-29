@@ -8,6 +8,8 @@
     android:background="@drawable/bg_rec"
 
     >
+
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/lv_news"
             android:layout_width="match_parent"
@@ -26,6 +28,18 @@
         android:gravity="center"
         android:layout_centerInParent="true"
         />
+
+    <ProgressBar
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:id="@+id/pb_download"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:max="100"
+        android:min="0"
+        android:background="@android:color/background_light"
+        android:indeterminate="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
     </RelativeLayout>

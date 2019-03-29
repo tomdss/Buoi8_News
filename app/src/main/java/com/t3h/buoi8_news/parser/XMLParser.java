@@ -48,6 +48,7 @@ public class XMLParser extends DefaultHandler {
                 item.setLink(builder.toString());
                 break;
 
+
             case Constances.DESC:
                 descGoogleNews();
                 break;

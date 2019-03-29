@@ -7,14 +7,14 @@ import android.content.Context;
 
 import com.t3h.buoi8_news.model.News;
 
-@Database(entities = {News.class},version = 1)
+@Database(entities = {News.class},version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance = null;
 
 
     public static AppDatabase getInstance(Context context) {
         if(instance == null){
-            instance = Room.databaseBuilder(context,AppDatabase.class, "news_manager")
+            instance = Room.databaseBuilder(context,AppDatabase.class, "news_manager_2")
                     .allowMainThreadQueries()
                     .build();
         }

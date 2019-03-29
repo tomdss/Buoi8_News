@@ -2,21 +2,18 @@ package com.t3h.buoi8_news.fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+
 import android.widget.PopupMenu;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.t3h.buoi8_news.AppDatabase;
@@ -25,23 +22,17 @@ import com.t3h.buoi8_news.MainActivity;
 import com.t3h.buoi8_news.R;
 import com.t3h.buoi8_news.WebviewActivity;
 import com.t3h.buoi8_news.adapter.NewsAdapter;
+import com.t3h.buoi8_news.connect.ConnectionDetector;
 import com.t3h.buoi8_news.model.News;
 
 import java.util.List;
 
-public class SavedFragment extends Fragment implements NewsAdapter.FaceItemListener {
+public class SavedFragment extends BaseFragment implements NewsAdapter.FaceItemListener {
 
     private RecyclerView lvSavedNews;
     private NewsAdapter adapter;
     private List<News> data;
 
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.frag_saved,container,false);
-        return v;
-    }
 
 
     @Override
@@ -49,6 +40,16 @@ public class SavedFragment extends Fragment implements NewsAdapter.FaceItemListe
         super.onActivityCreated(savedInstanceState);
         initViews();
         Log.e(getClass().getName(),"onActivityCreated");
+    }
+
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.frag_saved;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Saved";
     }
 
     private void initViews() {
@@ -73,10 +74,16 @@ public class SavedFragment extends Fragment implements NewsAdapter.FaceItemListe
 
     @Override
     public void onClick(int position) {
+        ConnectionDetector connectionDetector = new ConnectionDetector(this.getContext());
 
 //        Toast.makeText(getActivity(), "onClick", Toast.LENGTH_SHORT).show();
 
+        if(connectionDetector.isInternetAvailble())
         byExtra(adapter.getData().get(position).getLink());
+        else
+        byExtraPath(adapter.getData().get(position).getPath());
+
+//        Toast.makeText(getActivity(), ""+adapter.getData().get(position).getPath(), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -87,6 +94,16 @@ public class SavedFragment extends Fragment implements NewsAdapter.FaceItemListe
         intent.putExtra(MainActivity.REQUEST_LINK,link);
         this.startActivity(intent);
     }
+
+    public void byExtraPath(String path){
+
+        Intent intent = new Intent(getActivity(), WebviewActivity.class);
+
+        intent.putExtra(MainActivity.REQUEST_PATH,path);
+        this.startActivity(intent);
+    }
+
+
 
 
     @Override
@@ -115,13 +132,13 @@ public class SavedFragment extends Fragment implements NewsAdapter.FaceItemListe
         });
 
 
-        Toast.makeText(getActivity(), "onLongClick", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "onLongClick", Toast.LENGTH_SHORT).show();
 
 
     }
 
     private void addFavoriteNews(int position) {
-        Toast.makeText(getActivity(), "My Favorite", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "My Favorite", Toast.LENGTH_SHORT).show();
 
         data = adapter.getData();
         News news = new News();
@@ -131,6 +148,8 @@ public class SavedFragment extends Fragment implements NewsAdapter.FaceItemListe
         news.setDesc(data.get(position).getDesc());
         news.setPubDate(data.get(position).getPubDate());
         news.setLink(data.get(position).getLink());
+        news.setPath(data.get(position).getPath());
+
 
         MainActivity act = (MainActivity) getActivity();
 
@@ -138,7 +157,7 @@ public class SavedFragment extends Fragment implements NewsAdapter.FaceItemListe
                 .getNewsDao().insert(news);
 
 
-        act.showFragment(act.getFmFavorite());
+//        act.showFragment(act.getFmFavorite());
         act.getFmFavorite().getData();
 
     }
@@ -169,6 +188,8 @@ public class SavedFragment extends Fragment implements NewsAdapter.FaceItemListe
                 })
                 .show();
     }
+
+
 
 
 

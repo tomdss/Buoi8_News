@@ -7,51 +7,27 @@
     android:orientation="vertical"
     >
 
-    <LinearLayout
+
+
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/panel_news"-->
+        <!--/>-->
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_rec"
-        android:padding="@dimen/dp4"
-        >
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:gravity="center"
-            android:id="@+id/tv_news"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="TIN TỨC"
-            android:textColor="@color/colorWhite"
-            />
+    </android.support.design.widget.TabLayout>
 
-        <TextView
-            android:gravity="center"
-            android:id="@+id/tv_saved"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="ĐÃ LƯU"
-            android:textColor="@color/colorWhite"
-            />
-
-        <TextView
-            android:gravity="center"
-            android:id="@+id/tv_favorite"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="YÊU THÍCH"
-            android:textColor="@color/colorWhite"
-            />
-
-    </LinearLayout>
-
-    <FrameLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/panel_news"
-        />
+        android:layout_height="match_parent">
+
+    </android.support.v4.view.ViewPager>
 
 
 

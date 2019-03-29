@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.t3h.buoi8_news.connect.ConnectionDetector;
 import com.t3h.buoi8_news.utils.DialogUtils;
 
 public class WebviewActivity extends AppCompatActivity {
@@ -29,6 +30,7 @@ public class WebviewActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         showUrl(getExtra());
+//        showUrl("file:////storage/self/primary/1553882277384.html");
 
 
     }
@@ -42,6 +44,8 @@ public class WebviewActivity extends AppCompatActivity {
     }
 
     private class myBrowser extends WebViewClient {
+
+
 
 
         @Override
@@ -76,8 +80,12 @@ public class WebviewActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         String link = intent.getStringExtra(MainActivity.REQUEST_LINK);
+        String path = intent.getStringExtra(MainActivity.REQUEST_PATH);
 
+        ConnectionDetector connectionDetector = new ConnectionDetector(this);
+        if(connectionDetector.isInternetAvailble())
         return link;
+        return "file:///"+path;
 
 
 //        tvHello.setText("Hello! "+id+" - "+pass);
