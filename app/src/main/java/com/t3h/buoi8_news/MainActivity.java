@@ -1,20 +1,20 @@
 package com.t3h.buoi8_news;
 
 
-import android.Manifest;
-import android.content.DialogInterface;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.app.ActionBar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
-import android.view.View;
+import android.view.MenuItem;
 
 import com.t3h.buoi8_news.adapter.PageAdapter;
 import com.t3h.buoi8_news.fragment.FavoriteFragment;
@@ -22,11 +22,12 @@ import com.t3h.buoi8_news.fragment.NewsFragment;
 import com.t3h.buoi8_news.fragment.SavedFragment;
 
 import com.t3h.buoi8_news.parser.XMLAsync;
+import com.t3h.buoi8_news.utils.DialogExit;
 import com.t3h.buoi8_news.utils.DialogUtils;
 
 
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener,DialogExit.ExitCallback {
 
 
     public static final String REQUEST_LINK = "request.link";
@@ -39,9 +40,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private TabLayout tabTitle;
 
+    private DialogExit dialogExit;
+
+
     private NewsFragment fmNews = new NewsFragment();
-    private SavedFragment fmSaved = new SavedFragment();
     private FavoriteFragment fmFavorite = new FavoriteFragment();
+    private SavedFragment fmSaved = new SavedFragment();
+
 
 
 
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private void initViews() {
 
         pager = findViewById(R.id.pager);
-        adapter = new PageAdapter(getSupportFragmentManager(),fmNews,fmSaved,fmFavorite);
+        adapter = new PageAdapter(getSupportFragmentManager(),fmNews,fmFavorite,fmSaved);
         pager.setAdapter(adapter);
 
 
@@ -70,7 +75,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         pager.addOnPageChangeListener(this);
 
-        pager.setCurrentItem(1);
+        dialogExit = new DialogExit(this);
+        dialogExit.setCallback(this);
+
+
+        setCurrentItem(0);
+
+
 
 //        adapter = new NewsAdapter(this);
 
@@ -102,8 +113,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     public void showFragment(Fragment fm){
         if(fm==fmNews)pager.setCurrentItem(0);
-        if(fm==fmSaved)pager.setCurrentItem(1);
-        if(fm==fmFavorite)pager.setCurrentItem(2);
+        if(fm==fmFavorite)pager.setCurrentItem(1);
+        if(fm==fmSaved)pager.setCurrentItem(2);
+
     }
 
 
@@ -121,7 +133,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         searchView.setOnQueryTextListener(this);
 
-        return super.onCreateOptionsMenu(menu);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
+//        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
@@ -139,14 +158,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //        lvNews.getLayoutManager().scrollToPosition(0);
 //        showFragment(fmNews);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         return false;
     }
 
@@ -159,6 +179,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //
 //    }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+
+//                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+//        return super.onOptionsItemSelected(item);
+    }
 
 
 
@@ -176,25 +214,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //        Toast.makeText(this, "Back press", Toast.LENGTH_SHORT).show();
 
         if(pager.getCurrentItem()==0){
-            new AlertDialog.Builder(this)
-                    .setTitle("Notify")
-                    .setMessage("Do you want to exit?")
-                    .setCancelable(false)
-                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(MainActivity.this, "YES", Toast.LENGTH_SHORT).show();
-                            MainActivity.super.onBackPressed();
-                        }
-                    })
-                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(MainActivity.this, "NO", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    })
-                    .show();
+
+            dialogExit.show();
+            dialogExit.setCancelable(false);
+
+
         }else pager.setCurrentItem(pager.getCurrentItem()-1);
 
 
@@ -207,12 +231,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         return fmNews;
     }
 
-    public SavedFragment getFmSaved() {
-        return fmSaved;
-    }
-
     public FavoriteFragment getFmFavorite() {
         return fmFavorite;
+    }
+
+    public SavedFragment getFmSaved() {
+        return fmSaved;
     }
 
     @Override
@@ -231,6 +255,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     }
 
+    public void setCurrentItem(int i){
+        pager.setCurrentItem(i);
+    }
+
+    @Override
+    public void onYesClick() {
+        MainActivity.super.onBackPressed();
+    }
 
 
     //xu ly su kien click item

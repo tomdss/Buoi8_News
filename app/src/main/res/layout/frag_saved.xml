@@ -4,7 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#A4DEE6"
+    >
+
+    <ProgressBar
+        android:id="@+id/pb_download"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/background_light"
+        android:indeterminate="true"
+        android:max="100"
+        android:min="0"
+        android:visibility="gone" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:src="@drawable/saved"
+        />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/lv_saved_news"
@@ -14,6 +34,8 @@
         android:scrollbarStyle="outsideInset"
         android:scrollbars="vertical"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+
 
 
 </LinearLayout>

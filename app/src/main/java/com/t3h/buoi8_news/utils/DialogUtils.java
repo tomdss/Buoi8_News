@@ -6,6 +6,8 @@ import android.content.Context;
 
 public class DialogUtils {
     private static Dialog progressDialog;
+
+
     public static void show(Context context){
         dissmiss();
         progressDialog = new ProgressDialog
@@ -34,6 +36,8 @@ public class DialogUtils {
             progressDialog.dismiss();
         }
     }
+
+
 
 
 }

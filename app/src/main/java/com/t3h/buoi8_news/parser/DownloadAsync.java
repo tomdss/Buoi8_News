@@ -29,6 +29,7 @@ public class DownloadAsync extends AsyncTask<String, Integer, String> {
             FileOutputStream out = new FileOutputStream(f);
             URL url = new URL(link);
             URLConnection connection = url.openConnection();
+            connection.connect();
             InputStream in = connection.getInputStream();
             int total = connection.getContentLength();
             int totalSave = 0;
@@ -41,7 +42,6 @@ public class DownloadAsync extends AsyncTask<String, Integer, String> {
                 out.write(b, 0, count);
                 count = in.read(b);
             }
-
             in.close();
             out.close();
             return f.getPath();

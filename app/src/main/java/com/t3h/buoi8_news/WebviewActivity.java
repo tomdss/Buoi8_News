@@ -26,6 +26,7 @@ public class WebviewActivity extends AppCompatActivity {
             getSupportActionBar().hide();
             webView = findViewById(R.id.webView);
             webView.setWebViewClient(new myBrowser());
+            webView.getSettings().setJavaScriptEnabled(true);
         }catch (Exception e){
             e.printStackTrace();
         }

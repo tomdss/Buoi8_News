@@ -6,7 +6,7 @@
     <string name="desc">Desc</string>
     <string name="pubDate">PubDate</string>
     <string name="title">Title</string>
-    <string name="kh_ng_c_b_i_vi_t_n_o_hi_n_th">Không có bài viết nào để hiển thị</string>
+    <string name="kh_ng_c_b_i_vi_t_n_o_hi_n_th">There are no posts to display</string>
 
 </resources>
 
